@@ -1,0 +1,75 @@
+package io.github.gusg21.kberry;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextPane;
+
+public class kBerryGUI extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public void main() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					kBerryGUI frame = new kBerryGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public kBerryGUI() {
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		this.setTitle("kBerry Compiler Output");
+		URL iconURL = getClass().getResource("assets/icon.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		this.setIconImage(icon.getImage());
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		JTextPane textPane = new JTextPane();
+		int style = Font.BOLD;
+
+		Font fontConsole = new Font ("Verdana", style, 11);
+		textPane.setFont(fontConsole);
+		
+		MessageConsole mc = new MessageConsole(textPane);
+		mc.redirectOut();
+		mc.redirectErr(Color.RED, null);
+		mc.setMessageLines(100);
+		
+		JScrollPane scrollPane = new JScrollPane( textPane );
+		contentPane.add(scrollPane );
+		scrollPane.setViewportView(textPane);
+		
+		// ********************************
+		
+	}
+
+}

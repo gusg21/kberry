@@ -1,0 +1,5 @@
+package io.github.gusg21.kberry;
+
+public class TextAreaOutputStream {
+
+}

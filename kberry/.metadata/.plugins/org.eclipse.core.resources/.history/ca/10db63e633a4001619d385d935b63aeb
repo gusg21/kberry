@@ -1,0 +1,117 @@
+package io.github.gusg21.kberry;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class kBerryGUI extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtCpathtokb;
+	private JTextField txtNoPathNeeded;
+
+	/**
+	 * Launch the application.
+	 */
+	public void start() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					kBerryGUI frame = new kBerryGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public kBerryGUI() {
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		this.setTitle("kBerry Compiler Output");
+		URL iconURL = getClass().getResource("assets/icon.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		this.setIconImage(icon.getImage());
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		
+		int style = Font.BOLD;
+		Font fontConsole = new Font ("Verdana", style, 11);
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 414, 147);
+		contentPane.add(scrollPane);
+		JTextPane textPane = new JTextPane();
+		scrollPane.setViewportView(textPane);
+		textPane.setFont(fontConsole);
+		MessageConsole mc = new MessageConsole(textPane);
+		
+		txtCpathtokb = new JTextField();
+		txtCpathtokb.setText("C:\\path\\to\\kb");
+		txtCpathtokb.setBounds(80, 172, 344, 20);
+		contentPane.add(txtCpathtokb);
+		txtCpathtokb.setColumns(10);
+		
+		txtNoPathNeeded = new JTextField();
+		txtNoPathNeeded.setText("No Path needed; output in user folder in folder kberry-c");
+		txtNoPathNeeded.setColumns(10);
+		txtNoPathNeeded.setBounds(80, 198, 344, 20);
+		contentPane.add(txtNoPathNeeded);
+		
+		final JLabel lblOutputClass = new JLabel("Output Class");
+		lblOutputClass.setBounds(10, 184, 70, 49);
+		contentPane.add(lblOutputClass);
+		
+		final JLabel lblInputKB = new JLabel("Input KB File");
+		lblInputKB.setBounds(10, 157, 77, 50);
+		contentPane.add(lblInputKB);
+		
+		JButton btnNewButton = new JButton("Go!");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Compiler Init.");
+				kBerry kb = new kBerry();
+				kb.compile(lblInputKB.getText(), lblOutputClass.getText());
+			}
+		});
+		btnNewButton.setBounds(10, 229, 414, 23);
+		contentPane.add(btnNewButton);
+		
+		mc.redirectOut();
+		mc.redirectErr(Color.RED, null);
+		mc.setMessageLines(100);
+		
+		
+		
+		
+		
+		
+		
+		// ********************************
+		
+	}
+}

@@ -1,0 +1,12 @@
+package io.github.gusg21.kberry.supp;
+
+import javax.swing.JOptionPane;
+
+public class PopupHandler
+{
+
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+}

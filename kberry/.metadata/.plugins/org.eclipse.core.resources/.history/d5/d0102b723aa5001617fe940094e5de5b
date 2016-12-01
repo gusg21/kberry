@@ -1,0 +1,10 @@
+package io.github.gusg21.kberry;
+
+public class kBerryWrapper {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

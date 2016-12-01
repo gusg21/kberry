@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.wb.internal.core.model.util.RenameConvertSupport$RenameDialog">
+		<item value="697" key="x"/>
+		<item value="525" key="width"/>
+		<item value="379" key="y"/>
+		<item value="281" key="height"/>
+	</section>
+	<section name="org.eclipse.wb.internal.core.model.util.factory.FactoryCreateAction$FactoryCreateDialog">
+		<item value="486" key="x"/>
+		<item value="947" key="width"/>
+		<item value="130" key="y"/>
+		<item value="779" key="height"/>
+	</section>
+	<section name="org.eclipse.wb.internal.core.nls.ui.NlsDialog">
+		<item value="480" key="x"/>
+		<item value="960" key="width"/>
+		<item value="260" key="y"/>
+		<item value="520" key="height"/>
+	</section>
+	<section name="org.eclipse.wb.internal.core.editor.actions.assistant.LayoutAssistantWindow">
+		<item value="921" key="x"/>
+		<item value="469" key="y"/>
+	</section>
+	<section name="org.eclipse.wb.internal.core.model.property.editor.string.StringPropertyDialog">
+		<item value="695" key="x"/>
+		<item value="530" key="width"/>
+		<item value="347" key="y"/>
+		<item value="346" key="height"/>
+	</section>
+</section>

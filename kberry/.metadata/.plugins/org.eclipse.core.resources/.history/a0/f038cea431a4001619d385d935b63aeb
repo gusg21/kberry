@@ -1,0 +1,102 @@
+package io.github.gusg21.kberry;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextPane;
+import javax.swing.JTextField;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
+
+public class kBerryGUI extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+
+	/**
+	 * Launch the application.
+	 */
+	public void start() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					kBerryGUI frame = new kBerryGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public kBerryGUI() {
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		this.setTitle("kBerry Compiler Output");
+		URL iconURL = getClass().getResource("assets/icon.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		this.setIconImage(icon.getImage());
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		
+		int style = Font.BOLD;
+		Font fontConsole = new Font ("Verdana", style, 11);
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 414, 184);
+		contentPane.add(scrollPane);
+		JTextPane textPane = new JTextPane();
+		scrollPane.setViewportView(textPane);
+		textPane.setFont(fontConsole);
+		MessageConsole mc = new MessageConsole(textPane);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(80, 200, 344, 20);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(80, 226, 344, 20);
+		contentPane.add(textField_2);
+		
+		JLabel label = new JLabel("New label");
+		label.setBounds(10, 201, 200, 50);
+		contentPane.add(label);
+		
+		mc.redirectOut();
+		mc.redirectErr(Color.RED, null);
+		mc.setMessageLines(100);
+		
+		
+		
+		
+		
+		
+		
+		// ********************************
+		
+	}
+}

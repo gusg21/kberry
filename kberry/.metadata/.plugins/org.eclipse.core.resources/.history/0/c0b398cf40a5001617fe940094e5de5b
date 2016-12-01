@@ -1,0 +1,9 @@
+package io.github.gusg21.kberry;
+
+import java.io.IOException;
+
+public class CLS {
+    public static void clear(String... arg) throws IOException, InterruptedException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    }
+}

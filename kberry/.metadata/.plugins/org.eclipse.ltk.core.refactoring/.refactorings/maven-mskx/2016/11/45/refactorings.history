@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;maven-mskx&apos;&#x0D;&#x0A;- Original project: &apos;maven-mskx&apos;&#x0D;&#x0A;- Original element: &apos;maven-mskx/src/main/java/io.github.gusg21.kberry.io.github.gusg21.kberry&apos;" description="Delete element" element1="/src\/main\/java&lt;io.github.gusg21.kberry.io.github.gusg21.kberry" element2="/src\/main\/java&lt;io.github.gusg21.kberry.io.github.gusg21" element3="/src\/main\/java&lt;io.github.gusg21.kberry.io.github" element4="/src\/main\/java&lt;io.github.gusg21.kberry.io" elements="4" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1478349933950" subPackages="false" version="1.0"/>
+</session>

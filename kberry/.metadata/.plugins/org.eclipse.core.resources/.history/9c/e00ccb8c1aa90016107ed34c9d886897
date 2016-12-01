@@ -1,0 +1,481 @@
+/*
+ * 
+ * Created by gusg21, 2016
+ * This is open source software made by a teenager.
+ * Calm down.
+ * 
+ */
+
+package io.github.gusg21.kberry;
+
+import io.github.gusg21.kberry.supp.MetaChars;
+import io.github.gusg21.kberry.supp.PopupHandler;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+public class kBerry {
+
+	public static void parse(String inKB, String outClass, String outArgs) {
+		
+		
+		/*
+		 * 
+		 * DECLARATION ***********
+		 */
+
+		Scanner scan = new Scanner(System.in); // Get a Scanner object
+
+		String input = null;
+
+		System.out.print("KB File: "); // Ask for input kb file
+		
+		if (inKB != null) { // If provided, just display.
+			
+			InputStream is = null; // Input file processing
+			try {
+				is = new FileInputStream(inKB);
+			} catch (FileNotFoundException e1) {
+				throwError("File not found!");
+				e1.printStackTrace();
+			}
+			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+	
+			String line = null;
+			try {
+				line = buf.readLine();
+			} catch (IOException e1) {
+				throwError("IOException. Problem reading text!");
+				e1.printStackTrace();
+			}
+			StringBuilder sb = new StringBuilder();
+	
+			while (line != null) {
+				sb.append(line).append("\n");
+				try {
+					line = buf.readLine();
+				} catch (IOException e) {
+					throwError("IOException. Problem reading text!");
+					e.printStackTrace();
+				}
+			}
+	
+			String fileAsString = sb.toString();
+			System.out.println("Contents:\n\n" + fileAsString);
+			input = fileAsString;
+			System.out.println(inKB);
+			
+		} else { // Else prompt.
+			
+			InputStream is = null; // Input file processing
+			try {
+				is = new FileInputStream(scan.next());
+			} catch (FileNotFoundException e1) {
+				throwError("File not found!");
+				e1.printStackTrace();
+			}
+			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+	
+			String line = null;
+			try {
+				line = buf.readLine();
+			} catch (IOException e1) {
+				throwError("IOException. Problem reading text!");
+				e1.printStackTrace();
+			}
+			StringBuilder sb = new StringBuilder();
+	
+			while (line != null) {
+				sb.append(line).append("\n");
+				try {
+					line = buf.readLine();
+				} catch (IOException e) {
+					throwError("IOException. Problem reading text!");
+					e.printStackTrace();
+				}
+			}
+	
+			String fileAsString = sb.toString();
+			System.out.println("Contents:\n\n" + fileAsString);
+			input = fileAsString;
+		
+		}
+
+		String outfile;
+		
+		System.out.print("Output class name: "); // Ask for outfile
+		
+		if (outClass != null) {
+			
+			outfile = outClass;
+			System.out.println(outClass);
+			
+		} else {
+		
+			outfile = scan.next();
+		
+		}
+		String imports = "//Imports:\n";
+		boolean ScannerImport = false;
+		
+		String head = "public class " + outfile
+				+ " {\npublic static void main(String [] args) { \n"; // Pre-code
+		// java
+		// template
+
+		boolean amString = false;
+		boolean amArray = false;
+		boolean amComment = false;
+		
+		String arg = "";
+		
+		if (outArgs == "10092773555477::ask") {
+			System.out.println("Arguments: ");
+			outArgs = scan.next();
+		}
+		
+		if (outArgs != null) {
+			arg = outArgs;
+		} else {
+			arg = "";
+		}
+
+		String batchscript = "@echo off\njavac "
+				+ outfile
+				+ ".java\njava "
+				+ outfile 
+				+ " " 
+				+ arg
+				+ "\ndel "
+				+ outfile
+				+ ".class\nif %ERRORLEVEL% EQU 0 echo.\necho KBERRY: Build Successful!\npause>nul";
+
+		String end = "} // EOF"; // End of code
+		String code = "No Code!"; // Default code
+		String output = "";
+
+		String[] split = input.split("(?=<\\s+)|(?=\")|(?=[$])"); // Split input at the
+														// spaces and
+														// store to "split"
+		
+		ArrayList<String> postColonSplit = new ArrayList<String>();
+		
+		for (String current : split) {
+			current = MetaChars.escapeMetaCharacters(current);
+			if (!(":".toString().matches(lastChar(current))) || !(":".toString().matches(firstChar(current)))) {
+				for (String str : split)
+				    for (String s : str.split(":"))
+				        postColonSplit.add(s);
+			}
+		}
+		
+		if (postColonSplit != null) {
+			postColonSplit.toArray(split);
+		}
+		
+		if (split.length > 0) { // If we've actually put in output, remove
+								// "// No Code!" comment
+			code = "";
+		}
+
+		/*
+		 * 
+		 * THE GOOD STUFF **************
+		 */
+
+		for (String keyWord : split) { // Cycle through the code chunk array
+			
+			System.out.println(keyWord); // Print current code chunk for
+			// debugging
+
+			/*
+			 * 
+			 * ACTUAL KEYWORD PROCESSING *************************
+			 */
+			
+			if (!amString) { // If we aren't a string or a comment
+					
+					keyWord = keyWord.replaceAll("[/]##", "/*"); // /## Multiline ##/
+					keyWord = keyWord.replaceAll("##[/]", "*/"); // if: 5 < 6 :and: 9 >
+																	// 6 then:
+					
+					if (!amComment) {
+					
+						// Basic Keys
+		
+						keyWord = keyWord.replaceAll("[$]", ";"); // End of line indicator
+																	// ($)
+							
+						// Arrays
+						
+						if (amArray) {
+							keyWord = keyWord.replaceAll(":", ",");
+						} else {
+							keyWord = keyWord.replaceAll(":", ":");
+						}
+						
+						keyWord = keyWord.replaceAll(" \\[", " {");
+						keyWord = keyWord.replaceAll("\\]", "}");
+						
+						String[] arrayStartInd = {"{"};
+						String[] arrayEndInd = {"}"};
+						
+						if (listItemInString(keyWord, arrayStartInd)) { 
+							amArray = true;
+						}
+						
+						if (listItemInString(keyWord, arrayEndInd)) { 
+							amArray = false;
+						}
+						
+						//Print Line
+						keyWord = keyWord.replaceAll("print[(]", "System.out.println("); // print("text!")
+						keyWord = keyWord.replaceAll("txt[(]", "System.out.print("); // slprint("text!")
+							
+						// If
+						
+						keyWord = keyWord.replaceAll("if:", "if ("); // if: 5 < 6 :and: 9 >
+																		// 6 then:
+						keyWord = keyWord.replaceAll(":and:", "[&&]"); // if: 5 < 6 :and: 9
+																		// > 6 then:
+						keyWord = keyWord.replaceAll(":or:", "[||]"); // if: 5 < 6 :and: 9 >
+																		// 6 then:
+						keyWord = keyWord.replaceAll("then:", ") {"); // if: 5 < 6 :and: 9 >
+																		// 6 then:
+						keyWord = keyWord.replaceAll(":end", "}"); // if: 5 < 6 :and: 9 > 6
+																	// then:
+						keyWord = keyWord.replaceAll(":else:", "} else {"); // if: 5 < 6
+																			// :and: 9 > 6
+																			// then:
+						
+						// Variables
+						
+						keyWord = keyWord.replaceAll("SOLID&integer", "final int");
+						keyWord = keyWord.replaceAll("SOLID&boolean", "final boolean");
+						keyWord = keyWord.replaceAll("SOLID&str", "final String");
+						keyWord = keyWord.replaceAll("SOLID&dec", "final double");
+						
+						keyWord = keyWord.replaceAll("&integer", "int");
+						keyWord = keyWord.replaceAll("&boolean", "boolean");
+						keyWord = keyWord.replaceAll("&str", "String");
+						keyWord = keyWord.replaceAll("&dec", "double");
+						keyWord = keyWord.replaceAll("&void", "void");
+						keyWord = keyWord.replaceAll("&array", "\\[\\]");
+						
+						// Input
+						
+						if (isStr(keyWord, "txtin(")) {
+							ScannerImport = true;
+						}
+						
+						// Methods
+						
+						keyWord = keyWord.replaceAll("txtin[(]", "new Scanner(System.in).next(");
+						keyWord = keyWord.replaceAll("as:", "public static");
+						keyWord = keyWord.replaceAll("do:", "{");
+						
+						/*
+						 * 
+						 * as: &void helloWorld() do:
+						 * print("Hello World!")$
+						 * :end
+						 * 
+						 * public void helloWorld() {
+						 * System.out.println("Hello World!");
+						 * }
+						 * 
+						 */
+						
+						keyWord = keyWord.replaceAll("attempt:", "try {");
+						keyWord = keyWord.replaceAll(":no ", "} catch (");
+						keyWord = keyWord.replaceAll(":nomatter:", "} finally {");
+						
+						/*
+						 * 
+						 * attempt:
+						 * blah()$
+						 * :no Exception e then:
+						 * e:printStackTrace()$
+						 * :nomatter:
+						 * print("DONE!")$
+						 * :end
+						 * 
+						 */
+						
+					}
+
+			}
+			
+			String[] stringInd = {"\""}; // Set nonprocess chars
+			
+			if (listItemInString(keyWord, stringInd)) { // Am I currently processing
+												// stuff in a string?
+				amString = !amString;
+			}
+			
+			String[] commentStartInd = {"/*"};
+			String[] commentEndInd = {"*/"};
+			
+			if (listItemInString(keyWord, commentStartInd)) { 
+				amComment = true;
+			}
+			
+			if (listItemInString(keyWord, commentEndInd)) { 
+				amComment = false;
+			}
+
+			code += keyWord; // Append to output
+			
+			System.out.println("String? " + amString);
+			System.out.println("Array? " + amArray);
+			System.out.println("Comment? " + amComment);
+			System.out.println("First:" + firstChar(keyWord));
+
+		}
+
+		/*
+		 * COMPILE OUTPUT ***********************
+		 */
+
+		//Import handling
+		
+		if (ScannerImport) {
+			imports += "import java.util.Scanner;\n";
+		}
+		
+		// Closure
+		
+		if (amArray) {
+			throwError("Unclosed Array! May not be fatal.");
+		}
+		
+		if (amString) {
+			throwError("Unclosed String! May not be fatal.");
+		}
+		if (amComment) {
+			throwError("Unclosed Comment! May not be fatal.");
+		}
+		
+		output = imports + head + code + end; // Put the pieces together
+
+		System.out.println("\n\nOUTPUT:\n"); // Display the output!
+		
+		System.out.println(output); // Display the output!
+		
+		new File(System.getProperty("user.home") + "/kberry-c/" + outfile + "/").mkdirs();
+		
+		try (PrintWriter out = new PrintWriter(System.getProperty("user.home") // Write
+																				// to
+																				// the
+																				// directory
+				+ "/kberry-c/" + outfile + "/" + outfile + ".java")) {
+			out.println(output);
+		} catch (FileNotFoundException e) {
+			throwError("File export fail."); // Throw a file export failure
+			e.printStackTrace();
+		}
+
+		try (PrintWriter out = new PrintWriter(System.getProperty("user.home") // Write
+																				// a
+																				// batch
+																				// file
+																				// to
+																				// compile
+																				// and
+																				// run
+																				// to
+																				// directory
+																				// (run-{name}.bat)
+				+ "/kberry-c/" + outfile + "/run-" + outfile + ".bat")) {
+			out.println(batchscript);
+		} catch (FileNotFoundException e) {
+			throwError("File export fail."); // Throw a file export failure
+			e.printStackTrace();
+		}
+
+		scan.close();
+
+	}
+
+	private static boolean isStr(String str, String findStr) {
+		int lastIndex = 0;
+		int count = 0;
+
+		while (lastIndex != -1) {
+
+			lastIndex = str.indexOf(findStr, lastIndex);
+
+			if (lastIndex != -1) {
+				count++;
+				lastIndex += findStr.length();
+			}
+		}
+		return (count > 0);
+	}
+	
+	public static boolean listItemInString(String inputString, String[] items)
+	{
+	    for(int i =0; i < items.length; i++)
+	    {
+	        if(inputString.contains(items[i]))
+	        {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	public static void throwError(String s) { // A simple error throwing method.
+
+		System.err.println("\n\nFATAL:\n" + s);
+
+		try (PrintWriter out = new PrintWriter(
+				System.getProperty("user.home")
+						+ "/kberry-c/log-"
+						+ new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
+								.format(new Date()) + ".log")) {
+			out.println("FATAL: \n" + s);
+		} catch (FileNotFoundException e) {
+			throwError("File export fail."); // Throw a file export failure
+			e.printStackTrace();
+		}
+		
+		PopupHandler.errorBox("FATAL:\n" + s, "kBerry ERROR");
+
+	}
+
+	public static String readFile(String path, Charset encoding)
+			throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return new String(encoded, encoding);
+	}
+	
+	public static String lastChar(String input) {
+		System.out.println(input);
+		if (input != "" && input.length() < 1) {
+			return input.substring(input.length()-1, input.length());
+		} else {
+			return "EMPTY STRING";
+		}
+	}
+	
+	public static String firstChar(String input) {
+		System.out.println(input);
+		input.replaceFirst("\n", "");
+		return String.valueOf(input.charAt(0));
+	}
+
+}
